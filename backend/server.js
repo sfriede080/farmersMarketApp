@@ -1,8 +1,9 @@
 // entry point
 import express from 'express'
 import mysql from 'mysql'
-const app = express();
+import { Sequelize } from 'sequelize';
 
+const app = express();
 
 app.get("/", (req, res) => {
     res.send("Server is ready!");
@@ -21,7 +22,7 @@ app.listen(5000, () => {
 const connection = mysql.createConnection({
     host: 'localhost',     // host for connection
     port: 3306,            // default port for mysql is 3306
-    database: 'testdb',      // database from which we want to connect our node application
+    database: 'farmers_market_app',      // database from which we want to connect our node application
     user: 'root',          // username of the mysql connection
     password: 'RunnerGirl080**'       // password of the mysql connection
 });
@@ -35,3 +36,23 @@ connection.connect(function(err) {
         console.log("connection created with mysql successfully");
     }
 });
+
+connection.end();
+
+const sequelize = new Sequelize(
+    'farmers_market_app',
+    'root',
+    'RunnerGirl080**',
+    {
+        host: 'root@localhost:3306',
+        dialect: 'mysql'
+    }
+);
+
+sequelize.authenticate().then(() => {
+    console.log('Connection has been established successfully.');
+ }).catch((error) => {
+    console.error('Unable to connect to the database: ', error);
+ });
+
+ sequelize.close();
