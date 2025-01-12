@@ -2,7 +2,7 @@ import {DataTypes} from 'sequelize';
 const sequelize = require('./sequelize');
 
 // Define a model
-const User = sequelize.define('User', {
+const User = sequelize.define('Users', {
   fname: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -24,25 +24,24 @@ const User = sequelize.define('User', {
   user_created_at: {
     type: DataTypes.DATE,
     allowNull: false,
+    defaultValue: DataTypes.NOW
   }
 });
 
-// Synchronize the model with the database
-// This function will delete all existing tables in the database
-async function syncDatabase() {
-  await sequelize.sync();
-  console.log('Database synchronized.');
-}
 // Example usage
 // recommended to be in controller file
 async function run() {
-
-  await syncDatabase();// remember to comment this after server runs ones.
   // Create a new user
+  await User.sync() // This creates the table if it doesn't exist (and does nothing if it already exists)
   const newUser = await User.create({
-    username: 'john_doe',
+    fname: 'John',
+    lname: 'Doe',
     email: 'john.doe@example.com',
-  });
+    phone_number: '321-321-4321'
+    });
   console.log('New user created:', newUser.toJSON());
 }
-run();
+
+module.exports = User;
+
+//run();
