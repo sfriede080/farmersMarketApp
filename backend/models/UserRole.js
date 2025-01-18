@@ -8,7 +8,7 @@ const UserRole = sequelize.define('User_Roles', {
   user_FK: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    refernces: 'users', 
+    references: 'users', 
     referencesKey: 'ID'
   },
   role_FK: {
@@ -19,7 +19,7 @@ const UserRole = sequelize.define('User_Roles', {
   }
 });
 
-UserRole.hasMany(User)
-UserRole.hasMany(Role)
+User.hasMany(UserRole)
+Role.hasMany(UserRole)
 
 module.exports = UserRole;

@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize'; 
+const db_config = require('./database'); 
 
-const db_config = require('./database'); //path to the above config.js file 
 const sequelize = new Sequelize(db_config.development);
 // Test the connection 
 async function testConnection() {   

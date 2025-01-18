@@ -7,28 +7,35 @@ const Product = sequelize.define('Products', {
   category_FK: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    refernces: 'product_categories', 
+    references: 'product_categories', 
     referencesKey: 'ID'
   },
   name: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
+    validate: {
+      notEmpty: true
+    }
   },
   description: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: false
   },
   image_path: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: true
   },
   status: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      notEmpty: true
+    }
   },
   unit: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: false
   },
   units_in_stock: {
     type: DataTypes.DECIMAL(10,2),
@@ -42,5 +49,5 @@ const Product = sequelize.define('Products', {
   }
 });
 
-Product.hasMany(ProductCategory)
+ProductCategory.hasMany(Product)
 module.exports = Product;

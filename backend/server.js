@@ -14,5 +14,6 @@ app.get("/products", (req, res) => {
 });
 
 app.listen(5000, () => {
+    
     console.log('Sever started at http://localhost:5000');
 });

@@ -7,18 +7,22 @@ const InternalUserLoginAudit = sequelize.define('Internal_User_Login_Audits', {
   user_FK: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    refernces: 'users', 
+    referEnces: 'users', 
     referencesKey: 'ID'
   },
   action_performed: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      notEmpty: true
+    }
   },
   action_performed_at: {
     type: DataTypes.DATE,
+    default: DataTypes.NOW,
     allowNull: false
   }
 });
 
-InternalUserLoginAudit.hasMany(User)
+User.hasMany(InternalUserLoginAudit)
 module.exports = InternalUserLoginAudit;

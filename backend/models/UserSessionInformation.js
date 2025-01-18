@@ -7,12 +7,15 @@ const UserSessionInformation = sequelize.define('User_Session_Informations', {
   user_FK: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    refernces: 'users', 
+    references: 'users', 
     referencesKey: 'ID'
   },
   token: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      notEmpty: true
+    }
   },
   expires_at: {
     type: DataTypes.DATE,
@@ -20,5 +23,5 @@ const UserSessionInformation = sequelize.define('User_Session_Informations', {
   }
 });
 
-UserSessionInformation.hasMany(User)
+User.hasMany(UserSessionInformation)
 module.exports = UserSessionInformation;

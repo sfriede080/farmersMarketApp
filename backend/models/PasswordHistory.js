@@ -7,12 +7,15 @@ const PasswordHistory = sequelize.define('Password_Histories', {
   user_FK: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    refernces: 'users', 
+    references: 'users', 
     referencesKey: 'ID'
   },
   password_hash: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      notEmpty: true
+    }
   },
   retired_at: {
     type: DataTypes.DATE,
@@ -20,5 +23,5 @@ const PasswordHistory = sequelize.define('Password_Histories', {
   }
 });
 
-PasswordHistory.hasMany(User)
+User.hasMany(PasswordHistory)
 module.exports = PasswordHistory;

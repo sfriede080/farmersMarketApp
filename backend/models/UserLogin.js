@@ -7,12 +7,15 @@ const UserLogin = sequelize.define('User_Logins', {
   user_FK: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    refernces: 'users', 
+    references: 'users', 
     referencesKey: 'ID'
   },
   password_hash: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      notEmpty: true
+    }
   },
   locked_out: {
     type: DataTypes.BOOLEAN,
@@ -20,5 +23,5 @@ const UserLogin = sequelize.define('User_Logins', {
   }
 });
 
-UserLogin.hasMany(User)
+User.hasMany(UserLogin)
 module.exports = UserLogin;

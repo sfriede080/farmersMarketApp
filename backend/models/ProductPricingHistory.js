@@ -7,7 +7,7 @@ const ProductPricingHistory = sequelize.define('Product_Pricing_Histories', {
   product_FK: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    refernces: 'products', 
+    references: 'products', 
     referencesKey: 'ID'
   },
   price: {
@@ -17,17 +17,20 @@ const ProductPricingHistory = sequelize.define('Product_Pricing_Histories', {
   },
   started_at: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: false
   },
   ended_at: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: false
   },
   status: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      notEmpty: true
+    }
   }
 });
 
-ProductPricingHistory.hasMany(Product)
+Product.hasMany(ProductPricingHistory)
 module.exports = ProductPricingHistory;

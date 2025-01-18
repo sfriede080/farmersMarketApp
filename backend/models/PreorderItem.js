@@ -8,13 +8,13 @@ const PreorderItem = sequelize.define('Preorder_Items', {
   preorder_FK: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    refernces: 'preorders', 
+    references: 'preorders', 
     referencesKey: 'ID'
   },
   product_FK: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    refernces: 'products', 
+    references: 'products', 
     referencesKey: 'ID'
   },
   total_price: {
@@ -29,6 +29,6 @@ const PreorderItem = sequelize.define('Preorder_Items', {
   }
 });
 
-PreorderItem.hasMany(Preorder)
-PreorderItem.hasMany(Product)
+Preorder.hasMany(PreorderItem)
+Product.hasMany(PreorderItem)
 module.exports = PreorderItem;

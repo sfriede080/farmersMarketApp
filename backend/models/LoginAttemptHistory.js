@@ -7,7 +7,7 @@ const LoginAttemptHistory = sequelize.define('Login_Attempt_Histories', {
   user_FK: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    refernces: 'users', 
+    references: 'users', 
     referencesKey: 'ID'
   },
   login_success: {
@@ -16,9 +16,10 @@ const LoginAttemptHistory = sequelize.define('Login_Attempt_Histories', {
   },
   login_attempted_at: {
     type: DataTypes.DATE,
+    default: DataTypes.NOW,
     allowNull: false
   }
 });
 
-LoginAttemptHistory.hasMany(User)
+User.hasMany(LoginAttemptHistory)
 module.exports = LoginAttemptHistory;

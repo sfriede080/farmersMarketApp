@@ -8,7 +8,7 @@ const ProductIngredient = sequelize.define('Product_Ingredients', {
   product_FK: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    refernces: 'products', 
+    references: 'products', 
     referencesKey: 'ID'
   },
   ingredient_FK: {
@@ -19,7 +19,7 @@ const ProductIngredient = sequelize.define('Product_Ingredients', {
   }
 });
 
-ProductIngredient.hasMany(Product)
-ProductIngredient.hasMany(Ingredient)
+Product.hasMany(ProductIngredient)
+Ingredient.hasMany(ProductIngredient)
 
 module.exports = ProductIngredient;

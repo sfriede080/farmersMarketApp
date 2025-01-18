@@ -7,14 +7,15 @@ const ExternalUserLoginAudit = sequelize.define('External_User_Login_Audits', {
   user_FK: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    refernces: 'users', 
+    references: 'users', 
     referencesKey: 'ID'
   },
   logged_in_at: {
     type: DataTypes.DATE,
+    default: DataTypes.NOW,
     allowNull: false
   }
 });
 
-ExternalUserLoginAudit.hasMany(User)
+User.hasMany(ExternalUserLoginAudit)
 module.exports = ExternalUserLoginAudit;
