@@ -29,6 +29,7 @@ const Product = sequelize.define('Products', {
   status: {
     type: DataTypes.STRING,
     allowNull: false,
+    default: "CURRENT",
     validate: {
       notEmpty: true
     }
