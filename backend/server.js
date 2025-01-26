@@ -3,6 +3,8 @@ import express from 'express'
 const sequelize = require('./config/sequelize.js');
 import Product from './model/Product.js'
 import User from './model/User.js'
+import Ingredient from './model/Ingredient.js'
+import ProductCategory from './model/ProductCategory.js'
 
 const app = express();
 
@@ -94,6 +96,10 @@ app.post("/products", async (req, res) => {
 app.patch("/products/:id", async (req, res) => {
     const {id} = req.params;
     const req_product = req.body;
+    if(!req_product.name || !req_product.category_FK || !req_product.price
+        || !product.description || !product.unit) {
+        return res.status(400).json({success: false, message: "Please fill out all required fields."});
+    }
     try {
         const product = await Product.findByPk(id);
         if (product == null) {
@@ -188,6 +194,9 @@ app.post("/users", async (req, res) => {
 app.patch("/users/:id", async (req, res) => {
     const {id} = req.params;
     const req_user = req.body;
+    if(!req_user.lname || !req_user.fname || !req_user.email || !req_user.phone_number ) {
+        return res.status(400).json({success: false, message: "Please fill out all required fields."});
+    }
     try {
         const user = await User.findByPk(id);
         if (user == null) {
@@ -219,17 +228,197 @@ app.delete("/users/:id", async (req, res) => {
     }
 });
 
-//TODO
+//Ingredient Endpoints
 
-//get ingredient by name
-//get ingredient by id
-//get all ingredients
-//add ingredient
-//delete ingredient
-//update ingredient
+app.get("/ingredients", async (req, res) => {
+    try {
+        const ingredients = await Ingredient.findAll();
+        res.status(200).json({success: true, data: ingredients});
+    } catch (error) {
+        console.error("Error while fetching Ingredients: ", error.message);
+        return res.status(500).json({success: false, message: "Server Error"});
+    }
 
-//get all product categories
-//get category by name
-//get category by id
-//add category
-//delete category
+})
+
+app.get("/ingredients/:id", async (req, res) => {
+    const {id} = req.params;
+    try {
+        const ingredient = await Ingredient.findByPk(id);
+        if (ingredient == null) {
+            return res.status(404).json({success: false, message: "Ingredient not found."});
+        } else {
+            return res.status(200).json({success: true, data: ingredient});
+        }
+    } catch (error) {
+        console.error("Error while fetching a Ingredient: ", error.message);
+        return res.status(500).json({success: false, message: "Server Error"});
+    }
+})
+
+app.get("/ingredients/name/:name", async (req, res) => {
+    const {req_name} = req.params;
+    try {
+        const ingredient = await Ingredient.findOne({ where: { name: req_name } });
+        if (ingredient == null) {
+            return res.status(404).json({success: false, message: "Ingredient not found."});
+        } else {
+            return res.status(200).json({success: true, data: ingredient});
+        }
+    } catch (error) {
+        console.error("Error while fetching a Ingredient: ", error.message);
+        return res.status(500).json({success: false, message: "Server Error"});
+    }
+})
+
+app.post("/ingredients", async (req, res) => {
+    const ingredient = req.body; //sent in request
+    if(!ingredient.name || !ingredient.description) {
+        return res.status(400).json({success: false, message: "Please fill out all required fields."});
+    }
+
+    const newIngredient = Ingredient.build(ingredient);
+
+    try { 
+        await newIngredient.save();
+        return res.status(201).json({success: true, data: newIngredient});
+    } catch (error) {
+        console.error("Error while creating a Ingredient: ", error.message);
+        return res.status(500).json({success: false, message: "Server Error"});
+    }
+});
+
+app.patch("/ingredients/:id", async (req, res) => {
+    const {id} = req.params;
+    const req_ingredient = req.body;
+    if(!req_ingredient.name || !req_ingredient.description) {
+        return res.status(400).json({success: false, message: "Please fill out all required fields."});
+    }
+    try {
+        const ingredient = await Ingredient.findByPk(id);
+        if (ingredient == null) {
+            return res.status(404).json({success: false, message: "Ingredient not found."});
+        } else {
+            await ingredient.update(req_ingredient);
+            await ingredient.save();
+            return res.status(200).json({success: true, message: "Ingredient updated."});
+        }
+    } catch (error) {
+        console.error("Error while updating a Ingredient: ", error.message);
+        return res.status(500).json({success: false, message: "Server Error"});
+    }
+});
+
+app.delete("/ingredients/:id", async (req, res) => {
+    const {id} = req.params;
+    try {
+        const ingredient = await Ingredient.findByPk(id);
+        if (ingredient == null) {
+            return res.status(404).json({success: false, message: "Ingredient not found."});
+        } else {
+            await ingredient.destroy();
+            return res.status(200).json({success: true, message: "Ingredient deleted."});
+        }
+    } catch (error) {
+        console.error("Error while deleting a Ingredient: ", error.message);
+        return res.status(500).json({success: false, message: "Server Error"});
+    }
+});
+
+
+//Product Category Endpoints
+
+app.get("/productCategories", async (req, res) => {
+    try {
+        const productCategories = await ProductCategory.findAll();
+        res.status(200).json({success: true, data: productCategories});
+    } catch (error) {
+        console.error("Error while fetching Product Categories: ", error.message);
+        return res.status(500).json({success: false, message: "Server Error"});
+    }
+
+})
+
+app.get("/productCategories/:id", async (req, res) => {
+    const {id} = req.params;
+    try {
+        const productCategory = await ProductCategory.findByPk(id);
+        if (productCategory == null) {
+            return res.status(404).json({success: false, message: "Product Category not found."});
+        } else {
+            return res.status(200).json({success: true, data: productCategory});
+        }
+    } catch (error) {
+        console.error("Error while fetching a Product Category: ", error.message);
+        return res.status(500).json({success: false, message: "Server Error"});
+    }
+})
+
+app.get("/productCategories/type/:type", async (req, res) => {
+    const {req_type} = req.params;
+    try {
+        const productCategory = await ProductCategory.findOne({ where: { type: req_type } });
+        if (productCategory == null) {
+            return res.status(404).json({success: false, message: "Product Category not found."});
+        } else {
+            return res.status(200).json({success: true, data: productCategory});
+        }
+    } catch (error) {
+        console.error("Error while fetching a Product Category: ", error.message);
+        return res.status(500).json({success: false, message: "Server Error"});
+    }
+})
+
+app.post("/productCategories", async (req, res) => {
+    const productCategory = req.body; //sent in request
+    if(!productCategory.type || !productCategory.description) {
+        return res.status(400).json({success: false, message: "Please fill out all required fields."});
+    }
+
+    const newProductCategory = ProductCategory.build(productCategory);
+
+    try { 
+        await newProductCategory.save();
+        return res.status(201).json({success: true, data: newProductCategory});
+    } catch (error) {
+        console.error("Error while creating a Product Category: ", error.message);
+        return res.status(500).json({success: false, message: "Server Error"});
+    }
+});
+
+app.patch("/productCategories/:id", async (req, res) => {
+    const {id} = req.params;
+    const req_productCategory = req.body;
+    if(!req_productCategory.type || !req_productCategory.description) {
+        return res.status(400).json({success: false, message: "Please fill out all required fields."});
+    }
+    try {
+        const productCategory = await ProductCategory.findByPk(id);
+        if (productCategory == null) {
+            return res.status(404).json({success: false, message: "Product Category not found."});
+        } else {
+            await productCategory.update(req_productCategory);
+            await productCategory.save();
+            return res.status(200).json({success: true, message: "Product Category updated."});
+        }
+    } catch (error) {
+        console.error("Error while updating a Product Category: ", error.message);
+        return res.status(500).json({success: false, message: "Server Error"});
+    }
+});
+
+app.delete("/productCategories/:id", async (req, res) => {
+    const {id} = req.params;
+    try {
+        const productCategory = await ProductCategory.findByPk(id);
+        if (productCategory == null) {
+            return res.status(404).json({success: false, message: "Product Category not found."});
+        } else {
+            await productCategory.destroy();
+            return res.status(200).json({success: true, message: "Product Category deleted."});
+        }
+    } catch (error) {
+        console.error("Error while deleting a Product Category: ", error.message);
+        return res.status(500).json({success: false, message: "Server Error"});
+    }
+});
