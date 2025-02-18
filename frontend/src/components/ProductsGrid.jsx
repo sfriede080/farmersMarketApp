@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import '../styles.css';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import ProductCard from "./ProductCard";
 
-export default function ProductsGrid() {
+export default function ProductsGrid({products}) {
 
     const responsive = {
       desktop: {
@@ -24,22 +24,8 @@ export default function ProductsGrid() {
       }
     };
 
-    const [products, setProducts] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
-    const [productType, setProductType] = useState("All Products");
-
-
-    useEffect(() => {
-        const m = [
-            {'title': "Cookies", 'productType':"Cookies", 'description': "Chocolate Chip", 'image_path': "cookies.jpg", 'id': 0},
-            {'title': "Cake", 'productType':"Cakes",'description': "Chocolate", 'image_path': "cookies.jpg", 'id': 1},
-            {'title': "Brownies", 'productType':"Other",'description': "Chocolate Fudge", 'image_path': "cookies.jpg", 'id': 2},
-            {'title': "Cookies", 'productType':"Cookies", 'description': "Chocolate Chip", 'image_path': "cookies.jpg", 'id': 3},
-            {'title': "Cake", 'productType':"Cakes",'description': "Chocolate", 'image_path': "cookies.jpg", 'id': 4},
-            {'title': "Brownies", 'productType':"Other",'description': "Chocolate Fudge", 'image_path': "cookies.jpg", 'id': 5},
-        ]
-        setProducts(m);
-    }, []);
+    const [productType, setProductType] = useState("All Products")
 
     const handleSearchChange = (e) => {
       setSearchTerm(e.target.value)
