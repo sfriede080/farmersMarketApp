@@ -337,3 +337,13 @@ main {
   .react-multi-carousel-list {
     position: unset !important;
   }}
+
+  .form-input {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 30px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}

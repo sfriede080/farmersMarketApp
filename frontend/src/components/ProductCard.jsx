@@ -8,9 +8,9 @@ export default function ProductCard({product}) {
     }
     return (
         <div key = {product.id} className='card'>
-            <img src ={`/${product.image_path}`} alt = {product.title} onError={handleError}/>
+            <img src ={`/${product.image}`} alt = {product.name} onError={handleError}/>
             <div className='card-content'>
-                <h2>{product.title}</h2>
+                <h2>{product.name}</h2>
                 <p>{product.description}</p>
                 <a href="#" className="button">
                     Add to Cart

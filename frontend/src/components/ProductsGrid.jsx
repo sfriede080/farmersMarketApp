@@ -25,28 +25,28 @@ export default function ProductsGrid({products}) {
     };
 
     const [searchTerm, setSearchTerm] = useState("");
-    const [productType, setProductType] = useState("All Products")
+    const [category, setCategory] = useState("All Products")
 
     const handleSearchChange = (e) => {
       setSearchTerm(e.target.value)
     }
 
-    const handleProductTypeFilterChange = (e) => {
-      setProductType(e.target.value)
+    const handleCategoryFilterChange = (e) => {
+      setCategory(e.target.value)
     }
-
-    const matchesType = (product, productType) => {
-      return (productType === "All Products" || 
-      product.productType === productType)
+    
+    const matchesType = (product, category) => {
+      return (category === "0" || 
+      product.category === category)
     }
 
     const matchesSearchTerm = (product, searchTerm) => {
-      return (product.title.toLowerCase().includes(searchTerm) ||
+      return (product.name.toLowerCase().includes(searchTerm) ||
       product.description.toLowerCase().includes(searchTerm))
     }
 
     const filteredProducts = products.filter((product) => 
-      matchesType(product, productType) && matchesSearchTerm(product, searchTerm)
+      matchesType(product, category) && matchesSearchTerm(product, searchTerm)
     )
 
 
@@ -62,11 +62,11 @@ export default function ProductsGrid({products}) {
 
         <div className="filter-bar">
           <div className="filter-slot">
-            <select className="filter-dropdown" value={productType} onChange={handleProductTypeFilterChange}>
-              <option>All Products</option>
-              <option>Cookies</option>
-              <option>Cakes</option>
-              <option>Other</option>
+            <select className="filter-dropdown" value={category} onChange={handleCategoryFilterChange}>
+              <option value ="0">All Products</option>
+              <option value = "1">Cookies</option>
+              <option value = "2">Cakes</option>
+              <option value = "3">Other</option>
             </select>
           </div>
         </div>
