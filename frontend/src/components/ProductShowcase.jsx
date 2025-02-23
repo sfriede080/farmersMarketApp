@@ -1,10 +1,23 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import '../styles.css';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import ProductCard from "./ProductCard";
+import { getProducts } from "../services/productService";
 
-export default function ProductsGrid({products}) {
+export default function ProductShowcase() {
+
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    getProducts().then((result) => {
+      setProducts(result.data);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+  }, [])
+
 
     const responsive = {
       desktop: {

@@ -1,5 +1,6 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import '../styles.css';
+import { useNavigate} from "react-router-dom";
 
 export default function ProductForm({dispatch}) {
 
@@ -59,8 +60,14 @@ export default function ProductForm({dispatch}) {
 
     }
 
+    let navigate = useNavigate();
+
     return (
+    
         <div>
+            <>
+                <button onClick={() => navigate(-1)}>Back</button> 
+            </>
             <form onSubmit = {handleSubmit} className = 'ticket-form'>
                 <div>
                     <label>Category</label>
@@ -109,6 +116,9 @@ export default function ProductForm({dispatch}) {
                 <div>
                     <label>Units in Stock</label>
                     <input type = "number" value = {unitsInStock} min = "0" className="form-input" onChange={e => setUnitsInStock(e.target.value)}></input>
+                </div>
+                <div>
+                    <button type="submit">Submit</button>
                 </div>
             </form>
         </div>
