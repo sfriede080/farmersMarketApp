@@ -1,8 +1,13 @@
 import {DataTypes} from 'sequelize';
-const sequelize = require('./sequelize');
+import sequelize from '../config/sequelize.js';
 
 // Define a model
 const User = sequelize.define('Users', {
+  ID: {
+    type: DataTypes.INTEGER,
+    primaryKey: true
+
+  },
   fname: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -62,6 +67,4 @@ async function run() {
   console.log('Updated name:', newUser.toJSON());
 }
 
-module.exports = User;
-
-//run();
+export default User;

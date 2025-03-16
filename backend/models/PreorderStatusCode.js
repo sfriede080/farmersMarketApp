@@ -1,8 +1,13 @@
 import {DataTypes} from 'sequelize';
-const sequelize = require('./sequelize');
+import sequelize from '../config/sequelize.js';
 
 // Define a model
 const PreorderStatusCode = sequelize.define('Preorder_Status_Codes', {
+  ID: {
+    type: DataTypes.INTEGER,
+    primaryKey: true
+
+  },
   status_code: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -17,4 +22,4 @@ const PreorderStatusCode = sequelize.define('Preorder_Status_Codes', {
   }
 });
 
-module.exports = PreorderStatusCode;
+export default PreorderStatusCode;

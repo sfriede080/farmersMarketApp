@@ -1,10 +1,15 @@
 import {DataTypes} from 'sequelize';
-const sequelize = require('./config/sequelize.js');
-const Product = require('./Product.js');
-const Ingredient = require('./Ingredient.js');
+import sequelize from '../config/sequelize.js';
+import Product from './Product.js';
+import Ingredient from './Ingredient.js';
 
 // Define a model
 const ProductIngredient = sequelize.define('Product_Ingredients', {
+  ID: {
+    type: DataTypes.INTEGER,
+    primaryKey: true
+
+  },
   product_FK: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -19,7 +24,6 @@ const ProductIngredient = sequelize.define('Product_Ingredients', {
   }
 });
 
-Product.hasMany(ProductIngredient)
-Ingredient.hasMany(ProductIngredient)
-
-module.exports = ProductIngredient;
+ProductIngredient.hasMany(Product), {as: 'product_FK'};
+ProductIngredient.hasMany(Ingredient), {as: 'ingredient_FK'};
+export default ProductIngredient;

@@ -1,9 +1,15 @@
 import {DataTypes} from 'sequelize';
-const sequelize = require('./config/sequelize.js');
-const User = require('./User.js');
+import sequelize from '../config/sequelize.js';
+import User from './User.js';
+
 
 // Define a model
 const LoginAttemptHistory = sequelize.define('Login_Attempt_Histories', {
+  ID: {
+    type: DataTypes.INTEGER,
+    primaryKey: true
+
+  },
   user_FK: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -21,5 +27,5 @@ const LoginAttemptHistory = sequelize.define('Login_Attempt_Histories', {
   }
 });
 
-User.hasMany(LoginAttemptHistory)
-module.exports = LoginAttemptHistory;
+LoginAttemptHistory.hasMany(User), {as: 'user_FK'};
+export default LoginAttemptHistory;

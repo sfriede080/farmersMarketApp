@@ -1,5 +1,5 @@
 
-import { getProducts, deleteProduct } from "../services/productService";
+import { getProducts, deleteProductByID } from "../services/productService";
 
 
 export default function productReducer(state, action) {

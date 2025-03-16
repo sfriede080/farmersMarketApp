@@ -1,9 +1,14 @@
 import {DataTypes} from 'sequelize';
-const sequelize = require('./config/sequelize.js');
-const Product = require('./Product.js');
+import sequelize from '../config/sequelize.js';
+import Product from './Product.js';
 
 // Define a model
 const ProductPricingHistory = sequelize.define('Product_Pricing_Histories', {
+  ID: {
+    type: DataTypes.INTEGER,
+    primaryKey: true
+
+  },
   product_FK: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -32,5 +37,5 @@ const ProductPricingHistory = sequelize.define('Product_Pricing_Histories', {
   }
 });
 
-Product.hasMany(ProductPricingHistory)
-module.exports = ProductPricingHistory;
+ProductPricingHistory.hasMany(Product), {as: 'product_FK'};
+export default ProductPricingHistory;

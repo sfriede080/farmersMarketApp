@@ -1,9 +1,14 @@
 import {DataTypes} from 'sequelize';
-const sequelize = require('./config/sequelize.js');
-const User = require('./User.js');
+import sequelize from '../config/sequelize.js';
+import User from './User.js';
 
 // Define a model
 const UserSessionInformation = sequelize.define('User_Session_Informations', {
+  ID: {
+    type: DataTypes.INTEGER,
+    primaryKey: true
+
+  },
   user_FK: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -23,5 +28,5 @@ const UserSessionInformation = sequelize.define('User_Session_Informations', {
   }
 });
 
-User.hasMany(UserSessionInformation)
-module.exports = UserSessionInformation;
+UserSessionInformation.hasMany(User), {as: 'user_FK'};
+export default UserSessionInformation;

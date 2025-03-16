@@ -1,8 +1,13 @@
 import {DataTypes} from 'sequelize';
-const sequelize = require('./sequelize');
+import sequelize from '../config/sequelize.js';
 
 // Define a model
 const Ingredient = sequelize.define('Ingredients', {
+  ID: {
+    type: DataTypes.INTEGER,
+    primaryKey: true
+
+  },
   name: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -17,4 +22,4 @@ const Ingredient = sequelize.define('Ingredients', {
   }
 });
 
-module.exports = Ingredient;
+export default Ingredient;

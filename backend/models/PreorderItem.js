@@ -1,10 +1,15 @@
 import {DataTypes} from 'sequelize';
-const sequelize = require('./config/sequelize.js');
-const Preorder = require('./Preorder.js');
-const Product = require('./Product.js');
+import sequelize from '../config/sequelize.js';
+import Preorder from './Preorder.js';
+import Product from './Product.js';
 
 // Define a model
 const PreorderItem = sequelize.define('Preorder_Items', {
+  ID: {
+    type: DataTypes.INTEGER,
+    primaryKey: true
+
+  },
   preorder_FK: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -29,6 +34,6 @@ const PreorderItem = sequelize.define('Preorder_Items', {
   }
 });
 
-Preorder.hasMany(PreorderItem)
-Product.hasMany(PreorderItem)
-module.exports = PreorderItem;
+PreorderItem.hasMany(Preorder), {as: 'preorder_FK'};
+PreorderItem.hasMany(Product), {as: 'product_FK'};
+export default PreorderItem;

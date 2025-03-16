@@ -1,10 +1,15 @@
 import {DataTypes} from 'sequelize';
-const sequelize = require('./config/sequelize.js');
-const User = require('./User.js');
-const Role = require('./Role.js');
+import sequelize from '../config/sequelize.js';
+import User from './User.js';
+import Role from './Role.js';
 
 // Define a model
 const UserRole = sequelize.define('User_Roles', {
+  ID: {
+    type: DataTypes.INTEGER,
+    primaryKey: true
+
+  },
   user_FK: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -19,7 +24,7 @@ const UserRole = sequelize.define('User_Roles', {
   }
 });
 
-User.hasMany(UserRole)
-Role.hasMany(UserRole)
+UserRole.hasMany(User), {as: 'user_FK'};
+UserRole.hasMany(Role), {as: 'role_FK'};
 
-module.exports = UserRole;
+export default UserRole;

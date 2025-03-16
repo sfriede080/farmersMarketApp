@@ -11,7 +11,7 @@ export default function ProductShowcase() {
 
   useEffect(() => {
     getProducts().then((result) => {
-      setProducts(result.data);
+      setProducts(result.data.data);
     })
     .catch(err => {
       console.log(err);
@@ -38,7 +38,7 @@ export default function ProductShowcase() {
     };
 
     const [searchTerm, setSearchTerm] = useState("");
-    const [category, setCategory] = useState("All Products")
+    const [category, setCategory] = useState("0")
 
     const handleSearchChange = (e) => {
       setSearchTerm(e.target.value)
@@ -61,6 +61,7 @@ export default function ProductShowcase() {
     const filteredProducts = products.filter((product) => 
       matchesType(product, category) && matchesSearchTerm(product, searchTerm)
     )
+
 
 
     return (

@@ -1,8 +1,13 @@
 import {DataTypes} from 'sequelize';
-const sequelize = require('./sequelize');
+import sequelize from '../config/sequelize.js';
 
 // Define a model
 const Role = sequelize.define('Roles', {
+  ID: {
+    type: DataTypes.INTEGER,
+    primaryKey: true
+
+  },
   type: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -29,6 +34,4 @@ async function run() {
   console.log('New role created:', newRole.toJSON());
 }
 
-module.exports = Role;
-
-//run();
+export default Role;

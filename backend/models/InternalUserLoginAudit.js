@@ -1,9 +1,14 @@
 import {DataTypes} from 'sequelize';
-const sequelize = require('./config/sequelize.js');
-const User = require('./User.js');
+import sequelize from '../config/sequelize.js';
+import User from './User.js';
 
 // Define a model
 const InternalUserLoginAudit = sequelize.define('Internal_User_Login_Audits', {
+  ID: {
+    type: DataTypes.INTEGER,
+    primaryKey: true
+
+  },
   user_FK: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -24,5 +29,5 @@ const InternalUserLoginAudit = sequelize.define('Internal_User_Login_Audits', {
   }
 });
 
-User.hasMany(InternalUserLoginAudit)
-module.exports = InternalUserLoginAudit;
+InternalUserLoginAudit.hasMany(User), {as: 'user_FK'};
+export default InternalUserLoginAudit;

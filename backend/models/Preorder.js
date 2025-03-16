@@ -1,10 +1,15 @@
 import {DataTypes, DATE} from 'sequelize';
-const sequelize = require('./config/sequelize.js');
-const User = require('./User.js');
-const PreorderStatusCode = require('./PreorderStatusCode.js');
+import sequelize from '../config/sequelize.js';
+import User from './User.js';
+import PreorderStatusCode from './PreorderStatusCode.js';
 
 // Define a model
 const Preorder = sequelize.define('Preorders', {
+  ID: {
+    type: DataTypes.INTEGER,
+    primaryKey: true
+
+  },
   user_FK: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -37,6 +42,6 @@ const Preorder = sequelize.define('Preorders', {
   }
 });
 
-User.hasMany(Preorder)
-PreorderStatusCode.hasMany(Preorder)
-module.exports = Preorder;
+Preorder.hasMany(User), {as: 'user_FK'};
+Preorder.hasMany(PreorderStatusCode), {as: 'status_code_FK'};
+export default Preorder;

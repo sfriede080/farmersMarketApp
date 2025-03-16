@@ -1,15 +1,34 @@
 // entry point
 import express from 'express'
-const sequelize = require('./config/sequelize.js');
-import Product from './model/Product.js'
-import User from './model/User.js'
-import Ingredient from './model/Ingredient.js'
-import ProductCategory from './model/ProductCategory.js'
+import sequelize from './config/sequelize.js';
+import Product from './models/Product.js'
+import User from './models/User.js'
+import Ingredient from './models/Ingredient.js'
+import ProductCategory from './models/ProductCategory.js'
 
 const app = express();
 
+// Add headers before the routes are defined
+app.use(function (req, res, next) {
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    // Pass to next layer of middleware
+    next();
+});
+
 app.listen(5000, () => {
-    
     console.log('Sever started at http://localhost:5000');
 });
 

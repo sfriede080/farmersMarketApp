@@ -5,7 +5,8 @@ const api = axios.create({
 })
 
 const getProducts = () => api.get("products");
+const getProductByID = (id) => api.get('products/${id}');
 const createProduct = () => api.post("products");
-const deleteProduct = (id) => api.delete('products/${id}');
+const deleteProductByID = (id) => api.delete('products/${id}');
 
-export {getProducts, deleteProduct}
+export {getProducts, getProductByID, createProduct, deleteProductByID}
