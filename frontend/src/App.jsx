@@ -4,30 +4,22 @@ import './styles.css'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import ProductShowcase from './components/ProductShowcase'
-import ProductsList from './components/ProductsList'
+import Home from './components/Home'
 import {BrowserRouter as Router, Routes, Route, Link} from "react-router-dom";
 import ProductEditor from './components/ProductEditor'
 import productReducer from './reducers/productReducer'
 import ProductForm from './components/ProductForm'
 import UserContext from './context/UserContext'
+import { getProducts } from './api/services/productService'
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
+
+const queryClient = new QueryClient()
 
 export default function App() {
 
   const user = {name: "Admin", isAdmin: true}
-
-  const initialState = {
-    products: [
-      {'name': "Cookies", 'category':"1", 'description': "Chocolate Chip", 'image': "cookies.jpg", 'id': 0, "status": "1", "unit": "dozen", "unitsInStock": 0, "price": 10.00},
-      {'name': "Cake", 'category':"2",'description': "Chocolate", 'image': "cookies.jpg", 'id': 1, "status": "1", "unit": "dozen", "unitsInStock": 0, "price": 10.00},
-      {'name': "Brownies", 'category':"3",'description': "Chocolate Fudge", 'image': "cookies.jpg", 'id': 2, "status": "1", "unit": "dozen", "unitsInStock": 0, "price": 10.00},
-      {'name': "Cookies", 'category':"1", 'description': "Chocolate Chip", 'image': "cookies.jpg", 'id': 3, "status": "1", "unit": "dozen", "unitsInStock": 0, "price": 10.00},
-      {'name': "Cake", 'category':"2",'description': "Chocolate", 'image': "cookies.jpg", 'id': 4, "status": "1", "unit": "dozen", "unitsInStock": 0, "price": 10.00},
-      {'name': "Brownies", 'category':"3",'description': "Chocolate Fudge", 'image': "cookies.jpg", 'id': 5, "status": "1", "unit": "dozen", "unitsInStock": 0, "price": 10.00},
-    ]
-  }
-  const [state, dispatch] = useReducer(productReducer, initialState)
-
   return (
+    <QueryClientProvider client={queryClient}>
     <UserContext.Provider value = {user}>
         <div className = "App">
           <div className='container'>
@@ -43,16 +35,17 @@ export default function App() {
                 </ul>
               </nav>
               <Routes>
-                <Route path="/" element={<ProductsList/>}></Route>
+                <Route path="/" element={<Home/>}></Route>
                 <Route path="/products" element={<ProductShowcase/>}></Route>
-                <Route path="/products/edits" element={<ProductEditor products={state["products"]} dispatch = {dispatch}/>}></Route>
-                <Route path="/products/edits/add" element={<ProductForm dispatch = {dispatch}/>}></Route>
-                <Route path="/products/edits/update:id" element={<ProductForm dispatch = {dispatch}></ProductForm>}></Route>
+                <Route path="/products/edits" element={<ProductEditor/>}></Route>
+                <Route path="/products/edits/add" element={<ProductForm/>}></Route>
+                <Route path="/products/edits/update:id" element={<ProductForm></ProductForm>}></Route>
               </Routes>
             </Router>
           </div>
           <Footer></Footer>
         </div>
       </UserContext.Provider>
+      </QueryClientProvider>
   )
 }

@@ -1,5 +1,5 @@
 
-import { getProducts, deleteProductByID } from "../services/productService";
+import { getProducts, deleteProductByID } from "../api/services/productService";
 
 
 export default function productReducer(state, action) {
@@ -14,7 +14,7 @@ export default function productReducer(state, action) {
                     product.id === action.payload.id ? action.payload : product
             )};
         case "DELETE_PRODUCT":
-            deleteProduct(action.payload.id).then((result) => {
+            deleteProductByID(action.payload.id).then((result) => {
                 return {
                     ...state,
                     products: state.products.filter( product => 

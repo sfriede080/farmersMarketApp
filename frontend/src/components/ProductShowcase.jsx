@@ -1,25 +1,16 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import '../styles.css';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import ProductCard from "./ProductCard";
-import { getProducts } from "../services/productService";
-
+import useProducts from "../api/hooks/useProducts";
+import useProductCategories from "../api/hooks/useProductCategories";
 export default function ProductShowcase() {
 
-  const [products, setProducts] = useState([]);
+  const { data: products, isLoading: productsIsLoading, error: productsError } = useProducts();
+  const { data: productCategories, isLoading: productCategoriesIsLoading, error: productCategoriesError } = useProductCategories();
 
-  useEffect(() => {
-    getProducts().then((result) => {
-      setProducts(result.data.data);
-    })
-    .catch(err => {
-      console.log(err);
-    });
-  }, [])
-
-
-    const responsive = {
+  const responsive = {
       desktop: {
         breakpoint: { max: 3000, min: 1024 },
         items: 4,
@@ -50,7 +41,7 @@ export default function ProductShowcase() {
     
     const matchesType = (product, category) => {
       return (category === "0" || 
-      product.category === category)
+      product.category_FK == category)
     }
 
     const matchesSearchTerm = (product, searchTerm) => {
@@ -58,11 +49,15 @@ export default function ProductShowcase() {
       product.description.toLowerCase().includes(searchTerm))
     }
 
-    const filteredProducts = products.filter((product) => 
-      matchesType(product, category) && matchesSearchTerm(product, searchTerm)
-    )
+     
+  if (productsIsLoading || productCategoriesIsLoading) return <p>Loading products...</p>;
+  if (productsError) return <p>{productsError.status} Error: {productsError.message}</p>;
+  if (productCategoriesError) return <p>{productCategoriesError.status} Error: {productCategoriesError.message}</p>;
 
 
+  const filteredProducts = products.data.filter((product) => 
+    matchesType(product, category) && matchesSearchTerm(product, searchTerm)
+  )
 
     return (
       <div>
@@ -78,9 +73,9 @@ export default function ProductShowcase() {
           <div className="filter-slot">
             <select className="filter-dropdown" value={category} onChange={handleCategoryFilterChange}>
               <option value ="0">All Products</option>
-              <option value = "1">Cookies</option>
-              <option value = "2">Cakes</option>
-              <option value = "3">Other</option>
+              {productCategories.data.map((category) => (
+                <option value = {category.ID}>{category.category}</option>
+              ))}
             </select>
           </div>
         </div>

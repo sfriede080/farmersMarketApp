@@ -7,7 +7,6 @@ export default function ProductCard({product}) {
         e.target.src = "default.jpg";
     }
 
-    console.log(product.image_path)
     return (
         <div key = {product.id} className='card'>
             <img src ={`/${product.image_path}`} alt = {product.name} onError={handleError}/>

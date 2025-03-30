@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import '../styles.css';
 import { useNavigate} from "react-router-dom";
 
-export default function ProductForm({dispatch}) {
+export default function ProductForm() {
 
     const [category, setCategory] = useState("4");
     const categoryLabels = {
@@ -49,12 +49,6 @@ export default function ProductForm({dispatch}) {
             unitsInStock,
             price
         }
-
-        dispatch({
-            type: "ADD_PRODUCT",
-            payload: productData
-
-        })
         clearForm();
 
 

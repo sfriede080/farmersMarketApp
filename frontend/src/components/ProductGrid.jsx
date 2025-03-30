@@ -1,10 +1,16 @@
-import React, {useState} from "react";
+import React from "react";
 import '../styles.css';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import ProductItem from "./ProductItem";
+import useProducts from "../api/hooks/useProducts";
 
-export default function ProductGrid({products, dispatch}) {
+export default function ProductGrid() {
+
+  const { data, isLoading, error } = useProducts();
+
+  if (isLoading) return <p>Loading products...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
     const responsive = {
       desktop: {
@@ -35,8 +41,8 @@ export default function ProductGrid({products, dispatch}) {
             infinite={true}
             partialVisible={false}
             >
-                        {products.map(product => (
-                            <ProductItem product={product} dispatch={dispatch} key={product.id}></ProductItem>
+                        {data.data.map(product => (
+                            <ProductItem product={product} key={product.id}></ProductItem>
                         ))}
             </Carousel>
           </div>

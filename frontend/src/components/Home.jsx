@@ -1,11 +1,11 @@
 import React from "react";
 import '../styles.css';
 
-export default function ProductsList() {
+export default function Home() {
     return (
         <div>
             <h1 className = 'title'>
-                Available Products.
+                Welcome!
             </h1>
         </div>
     )
