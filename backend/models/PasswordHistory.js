@@ -1,7 +1,5 @@
 import {DataTypes} from 'sequelize';
 import sequelize from '../config/sequelize.js';
-import User from './User.js';
-
 
 // Define a model
 const PasswordHistory = sequelize.define('Password_Histories', {
@@ -29,5 +27,4 @@ const PasswordHistory = sequelize.define('Password_Histories', {
   }
 });
 
-PasswordHistory.hasMany(User), {as: 'user_FK'};
 export default PasswordHistory;

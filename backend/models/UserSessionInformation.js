@@ -1,6 +1,5 @@
 import {DataTypes} from 'sequelize';
 import sequelize from '../config/sequelize.js';
-import User from './User.js';
 
 // Define a model
 const UserSessionInformation = sequelize.define('User_Session_Informations', {
@@ -28,5 +27,4 @@ const UserSessionInformation = sequelize.define('User_Session_Informations', {
   }
 });
 
-UserSessionInformation.hasMany(User), {as: 'user_FK'};
 export default UserSessionInformation;

@@ -1,6 +1,5 @@
 import {DataTypes} from 'sequelize';
 import sequelize from '../config/sequelize.js';
-import User from './User.js';
 
 // Define a model
 const InternalUserLoginAudit = sequelize.define('Internal_User_Login_Audits', {
@@ -29,5 +28,4 @@ const InternalUserLoginAudit = sequelize.define('Internal_User_Login_Audits', {
   }
 });
 
-InternalUserLoginAudit.hasMany(User), {as: 'user_FK'};
 export default InternalUserLoginAudit;

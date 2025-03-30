@@ -1,7 +1,5 @@
 import {DataTypes} from 'sequelize';
 import sequelize from '../config/sequelize.js';
-import ProductCategory from './ProductCategory.js';
-
 
 // Define a model
 const Product = sequelize.define('Products', {
@@ -56,18 +54,4 @@ const Product = sequelize.define('Products', {
   }
 });
 
-/*
-ProductCategory.hasMany(Product),   
-{
-foreignKey: {
-  name: "category_FK",
-  type:  DataTypes.INTEGER,
-  allowNull: false,
-  validate: {
-    notNull: true
-  }
-},
-onDelete: "CASCADE"
-}
-*/
 export default Product;

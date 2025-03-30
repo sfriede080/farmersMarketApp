@@ -1,7 +1,5 @@
 import {DataTypes} from 'sequelize';
 import sequelize from '../config/sequelize.js';
-import User from './User.js';
-
 
 // Define a model
 const LoginAttemptHistory = sequelize.define('Login_Attempt_Histories', {
@@ -27,5 +25,4 @@ const LoginAttemptHistory = sequelize.define('Login_Attempt_Histories', {
   }
 });
 
-LoginAttemptHistory.hasMany(User), {as: 'user_FK'};
 export default LoginAttemptHistory;

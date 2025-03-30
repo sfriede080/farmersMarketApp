@@ -1,7 +1,5 @@
 import {DataTypes} from 'sequelize';
 import sequelize from '../config/sequelize.js';
-import Product from './Product.js';
-import Ingredient from './Ingredient.js';
 
 // Define a model
 const ProductIngredient = sequelize.define('Product_Ingredients', {
@@ -24,6 +22,4 @@ const ProductIngredient = sequelize.define('Product_Ingredients', {
   }
 });
 
-ProductIngredient.hasMany(Product), {as: 'product_FK'};
-ProductIngredient.hasMany(Ingredient), {as: 'ingredient_FK'};
 export default ProductIngredient;

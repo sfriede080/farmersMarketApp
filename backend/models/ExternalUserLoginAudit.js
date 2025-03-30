@@ -1,6 +1,5 @@
 import {DataTypes} from 'sequelize';
 import sequelize from '../config/sequelize.js';
-import User from './User.js';
 
 // Define a model
 const ExternalUserLoginAudit = sequelize.define('External_User_Login_Audits', {
@@ -22,5 +21,4 @@ const ExternalUserLoginAudit = sequelize.define('External_User_Login_Audits', {
   }
 });
 
-ExternalUserLoginAudit.hasMany(User), {as: 'user_FK'};
 export default ExternalUserLoginAudit;

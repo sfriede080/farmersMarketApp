@@ -1,6 +1,5 @@
 import {DataTypes} from 'sequelize';
 import sequelize from '../config/sequelize.js';
-import Product from './Product.js';
 
 // Define a model
 const ProductPricingHistory = sequelize.define('Product_Pricing_Histories', {
@@ -37,5 +36,4 @@ const ProductPricingHistory = sequelize.define('Product_Pricing_Histories', {
   }
 });
 
-ProductPricingHistory.hasMany(Product), {as: 'product_FK'};
 export default ProductPricingHistory;

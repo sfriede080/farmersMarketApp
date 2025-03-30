@@ -1,7 +1,5 @@
 import {DataTypes, DATE} from 'sequelize';
 import sequelize from '../config/sequelize.js';
-import User from './User.js';
-import PreorderStatusCode from './PreorderStatusCode.js';
 
 // Define a model
 const Preorder = sequelize.define('Preorders', {
@@ -42,6 +40,4 @@ const Preorder = sequelize.define('Preorders', {
   }
 });
 
-Preorder.hasMany(User), {as: 'user_FK'};
-Preorder.hasMany(PreorderStatusCode), {as: 'status_code_FK'};
 export default Preorder;

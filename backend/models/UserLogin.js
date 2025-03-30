@@ -1,6 +1,5 @@
 import {DataTypes} from 'sequelize';
 import sequelize from '../config/sequelize.js';
-import User from './User.js';
 
 // Define a model
 const UserLogin = sequelize.define('User_Logins', {
@@ -28,6 +27,5 @@ const UserLogin = sequelize.define('User_Logins', {
   }
 });
 
-UserLogin.hasMany(User), {as: 'user_FK'};
 export default UserLogin;
 

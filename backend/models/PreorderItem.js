@@ -1,7 +1,5 @@
 import {DataTypes} from 'sequelize';
 import sequelize from '../config/sequelize.js';
-import Preorder from './Preorder.js';
-import Product from './Product.js';
 
 // Define a model
 const PreorderItem = sequelize.define('Preorder_Items', {
@@ -34,6 +32,4 @@ const PreorderItem = sequelize.define('Preorder_Items', {
   }
 });
 
-PreorderItem.hasMany(Preorder), {as: 'preorder_FK'};
-PreorderItem.hasMany(Product), {as: 'product_FK'};
 export default PreorderItem;
