@@ -8,7 +8,7 @@ const ProductCategory = sequelize.define('Product_Categories', {
     primaryKey: true
 
   },
-  type: {
+  category: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
