@@ -3,8 +3,8 @@ import '../styles.css';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import ProductCard from "./ProductCard";
-import useProducts from "../api/hooks/useProducts";
-import useProductCategories from "../api/hooks/useProductCategories";
+import useProducts from "../api/hooks/products/useProducts";
+import useProductCategories from "../api/hooks/productCategories/useProductCategories";
 export default function ProductShowcase() {
 
   const { data: products, isLoading: productsIsLoading, error: productsError } = useProducts();

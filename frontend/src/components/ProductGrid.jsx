@@ -3,7 +3,7 @@ import '../styles.css';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import ProductItem from "./ProductItem";
-import useProducts from "../api/hooks/useProducts";
+import useProducts from "../api/hooks/products/useProducts";
 
 export default function ProductGrid() {
 
