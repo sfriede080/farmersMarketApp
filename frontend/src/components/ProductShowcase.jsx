@@ -61,22 +61,25 @@ export default function ProductShowcase() {
 
     return (
       <div>
-        <input 
-          type="text"
-          placeholder="Search products..."
-          className="search-input"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          ></input>
+        <div className="search-options">
+          <input 
+            type="text"
+            placeholder="Search products..."
+            className="search-input"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            ></input>
 
-        <div className="filter-bar">
-          <div className="filter-slot">
-            <select className="filter-dropdown" value={category} onChange={handleCategoryFilterChange}>
-              <option value ="0">All Products</option>
-              {productCategories.data.map((category) => (
-                <option value = {category.ID}>{category.category}</option>
-              ))}
-            </select>
+          
+          <div className="filter-bar">
+            <div className="filter-slot">
+              <select className="filter-dropdown" value={category} onChange={handleCategoryFilterChange}>
+                <option value ="0">All Products</option>
+                {productCategories.data.map((category) => (
+                  <option value = {category.ID}>{category.category}s</option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
 

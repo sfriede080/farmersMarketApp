@@ -4,7 +4,7 @@ import '../styles.css';
 export default function ProductCard({product}) {
 
     const handleError = (e) => {
-        e.target.src = "default.jpg";
+        e.target.src = "../../public/default.jpg";
     }
 
     return (
