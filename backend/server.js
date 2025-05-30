@@ -6,10 +6,8 @@ import Ingredient from "./models/Ingredient.js";
 import ProductCategory from "./models/ProductCategory.js";
 import authRoutes from "./routes/auth.js";
 import auth from "./middleware/auth.js";
-import dotenv from "dotenv";
 import cors from "cors";
 
-dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
