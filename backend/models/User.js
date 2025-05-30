@@ -1,70 +1,78 @@
-import {DataTypes} from 'sequelize';
-import sequelize from '../config/sequelize.js';
+import { DataTypes } from "sequelize";
+import sequelize from "../config/sequelize.js";
 
 // Define a model
-const User = sequelize.define('Users', {
-  ID: {
-    type: DataTypes.INTEGER,
-    primaryKey: true
-
+const User = sequelize.define(
+  "Users",
+  {
+    ID: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+    },
+    fname: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    lname: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+      unique: true,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        notEmpty: true,
+        isEmail: true,
+      },
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },
-  fname: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: true
-    }
-  },
-  lname: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: true
-    }
-  },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-    validate: {
-      notEmpty: true,
-      isEmail: true
-    }
-  },
-  phone_number: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-    validate: {
-      notEmpty: true,
-      is: ["^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$"]
-    }
-  },
-  user_created_at: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: DataTypes.NOW
+  {
+    instanceMethods: {
+      validatePassword: async function (candidatePassword) {
+        const match = await compare(
+          candidatePassword,
+          this.getDataValue("password")
+        );
+        return match;
+      },
+      getFullname: function () {
+        return [this.fname, this.lname].join(" ");
+      },
+    },
   }
+);
+
+// Hook to hash password on create
+User.beforeCreate(async (user) => {
+  const salt = await genSaltSync(10);
+  user.password = hashSync(user.password, salt);
 });
 
-
-// Example usage
-// recommended to be in controller file
-async function run() {
-  // Create a new user
-  await User.sync() // This creates the table if it doesn't exist (and does nothing if it already exists)
-  const newUser = await User.create({
-    fname: 'John',
-    lname: 'Doe',
-    email: 'john.doe@example.com',
-    phone_number: '321-321-4321'
-    });
-  console.log('New user created:', newUser.toJSON());
-  newUser.name = 'Ada';
-  // the name is still "Jane" in the database
-  await newUser.save();
-  // Now the name was updated to "Ada" in the database!
-  console.log('Updated name:', newUser.toJSON());
-}
+// Hook to hash password on update if it's changed
+User.beforeUpdate(async (user) => {
+  if (user.changed("password")) {
+    const salt = await genSaltSync(10);
+    user.password = hashSync(user.password, salt);
+  }
+});
 
 export default User;
