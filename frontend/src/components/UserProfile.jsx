@@ -9,6 +9,8 @@ export default function UserProfile() {
     return <div> Loading... </div>;
   }
 
+  console.log(user.picture);
+
   return (
     isAuthenticated && (
       <div>

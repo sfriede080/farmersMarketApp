@@ -1,5 +1,5 @@
-import "./App.css";
-import "./styles.css";
+import "./styles/App.css";
+import "./styles/styles.css";
 import Footer from "./components/Footer";
 import ProductShowcase from "./components/ProductShowcase";
 import Home from "./components/Home";
@@ -18,7 +18,7 @@ export default function App() {
   const { user, isAuthenticated, isLoading } = useAuth0();
 
   const userContextValue = {
-    user: { ...user, isAdmin: false },
+    user: { ...user, isAdmin: true },
     isAuthenticated: isAuthenticated,
     isLoading: isLoading,
   };

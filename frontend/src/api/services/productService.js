@@ -24,6 +24,7 @@ async function createProduct(product) {
     },
     body: JSON.stringify(product),
   });
+  console.log(response);
   if (!response.ok) {
     throw new Error("Network response was not ok");
   }
@@ -43,7 +44,7 @@ async function deleteProductByID(id) {
   return response.json();
 }
 
-async function updateProduct(id, updatedProduct) {
+async function updateProduct({ id, updatedProduct }) {
   const response = await fetch(`${BASE_URL}/products/${id}`, {
     method: "PATCH", // You could also use 'PUT' depending on your API
     headers: {

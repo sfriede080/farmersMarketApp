@@ -267,7 +267,7 @@ main {
   overflow: hidden;
   color:#2c2c2c;
   padding: 2rem 0;
-  margin: 0 20px;
+  margin: 20px 20px 20px 20px;
  
   img {
     position: absolute;
@@ -323,12 +323,6 @@ main {
   }
 
 
-
-  .react-multi-carousel-list {
-    padding: 0rem 0 2rem 0;
-    }
-
-
   .react-multi-carousel-list {
     position: unset !important;
   }}
@@ -348,4 +342,12 @@ main {
   padding-right: 0;
   display: flex;
   width: 100%;
+}
+
+.carouselUL {
+  gap: 30px;
+}
+
+.react-multi-carousel-item {
+  min-width: 230px;
 }

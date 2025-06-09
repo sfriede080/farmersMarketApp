@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import UserContext from "../context/UserContext";
-import "./NavigationBar.css";
+import "../styles/NavigationBar.css";
 import LoginButton from "./LoginButton";
 import LogoutButton from "./LogoutButton";
 import logo from "../assets/logo.png";
