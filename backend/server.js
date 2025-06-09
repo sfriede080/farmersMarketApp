@@ -6,12 +6,10 @@ import Ingredient from "./models/Ingredient.js";
 import ProductCategory from "./models/ProductCategory.js";
 import authRoutes from "./routes/auth.js";
 import auth from "./middleware/auth.js";
-import cors from "cors";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
 app.use(express.json());
 
 // Add headers before the routes are defined
@@ -118,6 +116,7 @@ app.get("/products/category/:category_id", async (req, res) => {
 
 app.post("/products", async (req, res) => {
   const product = req.body; //sent in request
+  console.log(product);
   if (
     !product.name ||
     !product.category_FK ||
@@ -125,6 +124,7 @@ app.post("/products", async (req, res) => {
     !product.description ||
     !product.unit
   ) {
+    console.log("missing fields");
     return res.status(400).json({
       success: false,
       message: "Please fill out all required fields.",
