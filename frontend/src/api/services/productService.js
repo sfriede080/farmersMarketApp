@@ -45,6 +45,7 @@ async function deleteProductByID(id) {
 }
 
 async function updateProduct({ id, updatedProduct }) {
+  console.log(updatedProduct);
   const response = await fetch(`${BASE_URL}/products/${id}`, {
     method: "PATCH", // You could also use 'PUT' depending on your API
     headers: {

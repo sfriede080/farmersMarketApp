@@ -2,6 +2,7 @@ import { useState } from "react";
 import "../styles/styles.css";
 import useCreateProduct from "../api/hooks/products/useCreateProduct";
 import useProductCategories from "../api/hooks/productCategories/useProductCategories";
+import useCreateProductCategory from "../api/hooks/productCategories/useCreateProductCategory";
 import useUpdateProduct from "../api/hooks/products/useUpdateProduct";
 
 function getKeyByValue(object, value) {
@@ -10,13 +11,29 @@ function getKeyByValue(object, value) {
 
 export default function ProductForm({ product }) {
   const { data, isLoading, error } = useProductCategories();
-  if (product) {
-    var mutation = useUpdateProduct();
-  } else {
-    var mutation = useCreateProduct();
-  }
 
-  let categoryLabels = { 0: "Uncategorized" };
+  const {
+    mutateAsync: updateProduct,
+    isPending: isUpdatingProduct,
+    error: updateProductError,
+    isSuccess: updateProductSuccess,
+  } = useUpdateProduct();
+
+  const {
+    mutateAsync: createProduct,
+    isPending: isCreatingProduct,
+    error: createProductError,
+    isSuccess: createProductSuccess,
+  } = useCreateProduct();
+
+  const {
+    mutateAsync: createCategory,
+    isPending: isCreatingCategory,
+    error: createCategoryError,
+    isSuccess: createCategorySuccess,
+  } = useCreateProductCategory();
+
+  let categoryLabels = { 0: "Add a new category" };
 
   if (data) {
     data.data.forEach((productCategory) => {
@@ -29,7 +46,9 @@ export default function ProductForm({ product }) {
     3: "UPCOMING",
   };
 
-  const [category, setCategory] = useState(product ? product.category_FK : "0");
+  const [category, setCategory] = useState(product ? product.category_FK : "");
+  const [newCategory, setNewCategory] = useState("");
+  const [newCategoryDesc, setNewCategoryDesc] = useState("");
   const [name, setName] = useState(product ? product.name : "");
   const [description, setDescription] = useState(
     product ? product.description : ""
@@ -55,24 +74,39 @@ export default function ProductForm({ product }) {
     setPrice(0.0);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const productData = {
-      name,
-      category_FK: category,
-      description,
-      image,
-      status,
-      unit,
-      units_in_stock: unitsInStock,
-      price,
-    };
-    if (product) {
-      mutation.mutate({ id: product.ID, updatedProduct: productData });
-    } else {
-      mutation.mutate(productData);
+    try {
+      let categoryID = category;
+
+      if (categoryID == "0") {
+        const newCategoryData = await createCategory({
+          category: newCategory,
+          description: newCategoryDesc,
+        });
+        categoryID = newCategoryData.data.ID;
+      }
+
+      const productData = {
+        name,
+        category_FK: categoryID,
+        description,
+        image,
+        status,
+        unit,
+        units_in_stock: unitsInStock,
+        price,
+      };
+
+      if (product) {
+        await updateProduct({ id: product.ID, updatedProduct: productData });
+      } else {
+        await createProduct(productData);
+      }
+      clearForm();
+    } catch (err) {
+      console.error("Error creating product or category:", err);
     }
-    clearForm();
   };
 
   if (isLoading) {
@@ -83,7 +117,6 @@ export default function ProductForm({ product }) {
     );
   }
   if (error) {
-    console.log(error);
     return (
       <>
         <p>Error loading product information.</p>
@@ -91,14 +124,23 @@ export default function ProductForm({ product }) {
     );
   }
 
-  if (mutation.isPending) {
+  if (isCreatingProduct) {
     return (
       <>
         <p>Adding product...</p>
       </>
     );
   }
-  if (mutation.isError) {
+
+  if (isUpdatingProduct) {
+    return (
+      <>
+        <p>Updating product...</p>
+      </>
+    );
+  }
+
+  if (createProductError) {
     return (
       <>
         <p>Error adding product.</p>
@@ -106,10 +148,26 @@ export default function ProductForm({ product }) {
     );
   }
 
-  if (mutation.isSuccess) {
+  if (updateProductError) {
+    return (
+      <>
+        <p>Error updating product.</p>
+      </>
+    );
+  }
+
+  if (createProductSuccess) {
     return (
       <>
         <p>Product added!</p>
+      </>
+    );
+  }
+
+  if (updateProductSuccess) {
+    return (
+      <>
+        <p>Product updated!</p>
       </>
     );
   }
@@ -134,6 +192,25 @@ export default function ProductForm({ product }) {
             ))}
           </select>
         </div>
+
+        {category == "0" && (
+          <div>
+            <label>Category</label>
+            <input
+              type="text"
+              value={newCategory}
+              className="form-input"
+              onChange={(e) => setNewCategory(e.target.value)}
+            ></input>
+            <label>Description</label>
+            <input
+              type="text"
+              value={newCategoryDesc}
+              className="form-input"
+              onChange={(e) => setNewCategoryDesc(e.target.value)}
+            ></input>
+          </div>
+        )}
         <div>
           <label>Status</label>
           <select

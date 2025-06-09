@@ -404,7 +404,7 @@ app.get("/productCategories/type/:type", async (req, res) => {
 
 app.post("/productCategories", async (req, res) => {
   const productCategory = req.body; //sent in request
-  if (!productCategory.type || !productCategory.description) {
+  if (!productCategory.category || !productCategory.description) {
     return res.status(400).json({
       success: false,
       message: "Please fill out all required fields.",
