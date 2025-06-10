@@ -16,6 +16,14 @@ async function getProductByID(id) {
   return response.json();
 }
 
+async function getProductsByStatus(status) {
+  const response = await fetch(`${BASE_URL}/products/status/${status}`);
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+  return response.json();
+}
+
 async function createProduct(product) {
   const response = await fetch(`${BASE_URL}/products`, {
     method: "POST",
@@ -64,6 +72,7 @@ async function updateProduct({ id, updatedProduct }) {
 export {
   getProducts,
   getProductByID,
+  getProductsByStatus,
   createProduct,
   deleteProductByID,
   updateProduct,

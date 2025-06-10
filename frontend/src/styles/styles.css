@@ -351,3 +351,13 @@ main {
 .react-multi-carousel-item {
   min-width: 230px;
 }
+
+.item-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.product-list {
+  min-height: 500px;
+  min-width: 500px;
+}

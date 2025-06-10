@@ -3,7 +3,7 @@ import "../styles/styles.css";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import ProductCard from "./ProductCard";
-import useProducts from "../api/hooks/products/useProducts";
+import useProductsByStatus from "../api/hooks/products/useProductsByStatus";
 import useProductCategories from "../api/hooks/productCategories/useProductCategories";
 
 export default function ProductShowcase() {
@@ -11,7 +11,8 @@ export default function ProductShowcase() {
     data: products,
     isLoading: productsIsLoading,
     error: productsError,
-  } = useProducts();
+  } = useProductsByStatus("CURRENT");
+
   const {
     data: productCategories,
     isLoading: productCategoriesIsLoading,
@@ -107,7 +108,7 @@ export default function ProductShowcase() {
         </div>
       </div>
 
-      <div>
+      <div className="product-list">
         <Carousel
           responsive={responsive}
           swipeable={true}

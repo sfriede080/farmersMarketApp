@@ -6,7 +6,7 @@ import useCreateProductCategory from "../api/hooks/productCategories/useCreatePr
 import useUpdateProduct from "../api/hooks/products/useUpdateProduct";
 
 function getKeyByValue(object, value) {
-  return Object.keys(object).find((key) => object[key] === value);
+  return Object.keys(object).find((key) => object[key] == value);
 }
 
 export default function ProductForm({ product }) {
@@ -40,11 +40,12 @@ export default function ProductForm({ product }) {
       categoryLabels[productCategory.ID] = productCategory.category;
     });
   }
-  const statusLabels = {
-    1: "CURRENT",
-    2: "PAST",
-    3: "UPCOMING",
-  };
+
+  const statusOptions = [
+    { key: 1, label: "CURRENT" },
+    { key: 2, label: "PAST" },
+    { key: 3, label: "UPCOMING" },
+  ];
 
   const [category, setCategory] = useState(product ? product.category_FK : "");
   const [newCategory, setNewCategory] = useState("");
@@ -55,7 +56,9 @@ export default function ProductForm({ product }) {
   );
   const [image, setImage] = useState("");
   const [status, setStatus] = useState(
-    product ? getKeyByValue(statusLabels, product.status) : "1"
+    product
+      ? statusOptions.find((option) => option.label === product.status)?.key
+      : 1
   );
   const [unit, setUnit] = useState(product ? product.unit : "");
   const [unitsInStock, setUnitsInStock] = useState(
@@ -68,7 +71,7 @@ export default function ProductForm({ product }) {
     setName("");
     setDescription("");
     setImage("");
-    setStatus("1");
+    setStatus(1);
     setUnit("");
     setUnitsInStock(0);
     setPrice(0.0);
@@ -92,7 +95,7 @@ export default function ProductForm({ product }) {
         category_FK: categoryID,
         description,
         image,
-        status,
+        status: statusOptions.find((option) => option.key == status)?.label,
         unit,
         units_in_stock: unitsInStock,
         price,
@@ -216,14 +219,14 @@ export default function ProductForm({ product }) {
           <select
             value={status}
             className="form-input"
-            onChange={(e) => setStatus(e.target.value)}
+            onChange={(e) => setStatus(Number(e.target.value))}
           >
             <option disabled value="">
               Select...
             </option>
-            {Object.keys(statusLabels).map((key) => (
-              <option value={key.toString()} key={key}>
-                {statusLabels[key]}
+            {statusOptions.map((option) => (
+              <option key={option.key} value={option.key}>
+                {option.label}
               </option>
             ))}
           </select>

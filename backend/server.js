@@ -95,6 +95,23 @@ app.get("/products/name/:name", async (req, res) => {
   }
 });
 
+app.get("/products/status/:status", async (req, res) => {
+  const { status } = req.params;
+  try {
+    const products = await Product.findAll({ where: { status: status } });
+    if (products == null || products.length == 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found." });
+    } else {
+      return res.status(200).json({ success: true, data: products });
+    }
+  } catch (error) {
+    console.error("Error while fetching Products: ", error.message);
+    return res.status(500).json({ success: false, message: "Server Error" });
+  }
+});
+
 app.get("/products/category/:category_id", async (req, res) => {
   const { category_id } = req.params;
   try {

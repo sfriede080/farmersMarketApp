@@ -4,12 +4,39 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import ProductItem from "./ProductItem";
 import useProducts from "../api/hooks/products/useProducts";
-
+import { useState } from "react";
 export default function ProductGrid() {
   const { data, isLoading, error } = useProducts();
+  const [status, setStatus] = useState(0);
 
   if (isLoading) return <p>Loading products...</p>;
   if (error) return <p>Error: {error.message}</p>;
+
+  const statusOptions = [
+    { key: 0, label: "ALL" },
+    { key: 1, label: "CURRENT" },
+    { key: 2, label: "PAST" },
+    { key: 3, label: "UPCOMING" },
+  ];
+
+  const handleStatusFilterChange = (e) => {
+    setStatus(e.target.value);
+  };
+
+  const matchesStatus = (product, status) => {
+    console.log(product);
+    console.log(status);
+    console.log(statusOptions.find((option) => option.key == status)?.label);
+    return (
+      status == 0 ||
+      statusOptions.find((option) => option.key == status)?.label ===
+        product.status
+    );
+  };
+
+  const filteredProducts = data.data.filter((product) =>
+    matchesStatus(product, status)
+  );
 
   const responsive = {
     desktop: {
@@ -31,7 +58,22 @@ export default function ProductGrid() {
 
   return (
     <div>
-      <div>
+      <div className="filter-bar">
+        <div className="filter-slot">
+          <select
+            className="filter-dropdown"
+            value={status}
+            onChange={handleStatusFilterChange}
+          >
+            {statusOptions.map((option) => (
+              <option value={option.key} key={option.key}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+      <div className="product-list">
         <Carousel
           responsive={responsive}
           swipeable={true}
@@ -40,7 +82,7 @@ export default function ProductGrid() {
           partialVisible={false}
           sliderClass="carouselUL"
         >
-          {data.data.map((product) => (
+          {filteredProducts.map((product) => (
             <ProductItem product={product} key={product.ID}></ProductItem>
           ))}
         </Carousel>

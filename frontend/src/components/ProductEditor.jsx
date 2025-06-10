@@ -26,10 +26,9 @@ export default function ProductEditor() {
           <UpdateProductModal onClose={() => setShowAddProductModal(false)} />,
           document.body
         )}
-      <div>
+      <div className="item-wrapper">
         <h3>Logged in as: {user && user.name ? user.name : "Unknown Admin"}</h3>
-      </div>
-      <div>
+
         <button className="button" onClick={() => setShowAddProductModal(true)}>
           Add Product
         </button>
