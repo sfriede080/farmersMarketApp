@@ -17,7 +17,9 @@ async function getProductByID(id) {
 }
 
 async function getProductsByStatus(status) {
+  console.log(status);
   const response = await fetch(`${BASE_URL}/products/status/${status}`);
+  console.log(response);
   if (!response.ok) {
     throw new Error("Network response was not ok");
   }

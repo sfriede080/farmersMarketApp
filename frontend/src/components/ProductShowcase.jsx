@@ -59,6 +59,17 @@ export default function ProductShowcase() {
     );
   };
 
+  if (products.data.length == 0) {
+    return (
+      <>
+        <h3>
+          Currently, there are no items available for preorder. Please check
+          again later!
+        </h3>
+      </>
+    );
+  }
+
   if (productsIsLoading || productCategoriesIsLoading)
     return <p>Loading products...</p>;
   if (productsError)
@@ -108,20 +119,26 @@ export default function ProductShowcase() {
         </div>
       </div>
 
-      <div className="product-list">
-        <Carousel
-          responsive={responsive}
-          swipeable={true}
-          draggable={true}
-          infinite={true}
-          partialVisible={false}
-          sliderClass="carouselUL"
-        >
-          {filteredProducts.map((product) => (
-            <ProductCard product={product} key={product.ID}></ProductCard>
-          ))}
-        </Carousel>
-      </div>
+      {filteredProducts.length == 0 ? (
+        <div className="product-list">
+          <p>No products found :(</p>
+        </div>
+      ) : (
+        <div className="product-list">
+          <Carousel
+            responsive={responsive}
+            swipeable={true}
+            draggable={true}
+            infinite={true}
+            partialVisible={false}
+            sliderClass="carouselUL"
+          >
+            {filteredProducts.map((product) => (
+              <ProductCard product={product} key={product.ID}></ProductCard>
+            ))}
+          </Carousel>
+        </div>
+      )}
     </div>
   );
 }

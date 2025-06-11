@@ -7,7 +7,7 @@ const useUpdateProduct = () => {
   return useMutation({
     mutationFn: updateProduct,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries(["products"]);
     },
   });
 };

@@ -7,7 +7,6 @@ const useCreateProducCategory = () => {
   return useMutation({
     mutationFn: createProductCategory,
     onSuccess: (data) => {
-      console.log(data);
       queryClient.invalidateQueries({ queryKey: ["productCategories"] });
       return data;
     },

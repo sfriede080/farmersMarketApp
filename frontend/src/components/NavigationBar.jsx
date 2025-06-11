@@ -11,47 +11,42 @@ export default function NavigationBar() {
   const { user, isAuthenticated, isLoading } = useContext(UserContext);
   return (
     <nav className="nav">
-      <Link className="site-title" to="/">
-        {" "}
-        <img
-          src={logo}
-          background-color="white"
-          width="200px"
-          alt="Lily & Loaves"
-        />{" "}
-      </Link>
+      <div className="navbar-left">
+        <Link className="site-title" to="/">
+          {" "}
+          <img
+            src={logo}
+            background-color="white"
+            width="200px"
+            alt="Lily & Loaves"
+          />{" "}
+        </Link>
 
-      <ul>
-        <li>
-          <Link className="" to="/products">
-            Preorder
-          </Link>
-        </li>
+        <Link className="nav-link" to="/products">
+          Preorder
+        </Link>
+
         {user.isAdmin && (
-          <li>
-            <Link to="/products/edits">Edit Products</Link>
-          </li>
+          <Link className="nav-link" to="/products/edits">
+            Edit Products
+          </Link>
         )}
-      </ul>
-      <h2 className="app-subtitle"> Homemade baked goods and pastries. </h2>
-      <ul>
+      </div>
+
+      <h2 className="center-title"> Homemade baked goods and pastries. </h2>
+
+      <div className="navbar-right">
         {!isAuthenticated ? (
-          <li>
-            <LoginButton />
-          </li>
+          <LoginButton className="nav-link" />
         ) : (
-          <li>
-            <LogoutButton />
-          </li>
-        )}
-        {isAuthenticated && (
-          <li>
-            <Link className="" to="/profile">
+          <>
+            <Link className="nav-link" to="/profile">
               Profile
             </Link>
-          </li>
+            <LogoutButton className="nav-link" />
+          </>
         )}
-      </ul>
+      </div>
     </nav>
   );
 }
