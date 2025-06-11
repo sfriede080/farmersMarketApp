@@ -4,46 +4,22 @@ import Product from "./models/Product.js";
 import User from "./models/User.js";
 import Ingredient from "./models/Ingredient.js";
 import ProductCategory from "./models/ProductCategory.js";
-import authRoutes from "./routes/auth.js";
-import auth from "./middleware/auth.js";
+import { checkJWT } from "./middleware/auth.js";
+import cors from "cors";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.use(
+  cors({
+    origin: "http://localhost:5173", // React dev server
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"], // ✅ include Authorization here
+  })
+);
+
+// other middleware like express.json()
 app.use(express.json());
-
-// Add headers before the routes are defined
-app.use(function (req, res, next) {
-  // Website you wish to allow to connect
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
-
-  // Request methods you wish to allow
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-  );
-
-  // Request headers you wish to allow
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type"
-  );
-
-  // Set to true if you need the website to include cookies in the requests sent
-  // to the API (e.g. in case you use sessions)
-  res.setHeader("Access-Control-Allow-Credentials", true);
-
-  // Pass to next layer of middleware
-  next();
-});
-
-//Routes
-app.use("/api/auth", authRoutes);
-
-// Protected route (only accessible with a valid token)
-app.get("/api/private", auth, (req, res) => {
-  res.send("This is a protected route");
-});
 
 app.get("/", (req, res) => {
   res.send("Server is ready!");
@@ -215,6 +191,33 @@ app.get("/users", async (req, res) => {
     res.status(200).json({ success: true, data: users });
   } catch (error) {
     console.error("Error while fetching Users: ", error.message);
+    return res.status(500).json({ success: false, message: "Server Error" });
+  }
+});
+
+app.post("/users/sync", checkJWT, async (req, res) => {
+  const user = req.body;
+  if (!user.name || !user.email || !user.auth0_id) {
+    return res.status(400).json({
+      success: false,
+      message: "Please fill out all required fields.",
+    });
+  }
+  try {
+    const existingUser = await User.findOne({
+      where: { auth0_id: user.auth0_id },
+    });
+
+    if (existingUser == null) {
+      const newUser = User.build(user);
+      await newUser.save();
+      return res.status(201).json({ success: true, data: newUser });
+    } else {
+      return res.status(200).json({ success: true, data: existingUser });
+    }
+  } catch (error) {
+    console.log(error);
+    console.error("Error while syncing User: ", error.message);
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 });

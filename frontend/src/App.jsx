@@ -7,15 +7,23 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProductEditor from "./components/ProductEditor";
 import ProductForm from "./components/ProductForm";
 import UserContext from "./context/UserContext";
-import { QueryClient, QueryClientProvider } from "react-query";
 import NavigationBar from "./components/NavigationBar";
 import { useAuth0 } from "@auth0/auth0-react";
 import UserProfile from "./components/UserProfile";
-
-const queryClient = new QueryClient();
+import useSyncUser from "./api/hooks/users/useSyncUser";
+import { useEffect } from "react";
 
 export default function App() {
-  const { user, isAuthenticated, isLoading } = useAuth0();
+  const { user, isAuthenticated, isLoading, getAccessTokenSilently } =
+    useAuth0();
+
+  const syncUserMutation = useSyncUser({ user, getAccessTokenSilently });
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      syncUserMutation.mutate();
+    }
+  }, [isAuthenticated, user]);
 
   const userContextValue = {
     user: { ...user, isAdmin: true },
@@ -23,35 +31,32 @@ export default function App() {
     isLoading: isLoading,
   };
 
+  console.log(userContextValue);
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <UserContext.Provider value={userContextValue}>
-        <Router>
-          <NavigationBar />
-          <div className="App">
-            <div>
-              <Routes>
-                <Route path="/" element={<Home />}></Route>
-                <Route path="/profile" element={<UserProfile />}></Route>
-                <Route path="/products" element={<ProductShowcase />}></Route>
-                <Route
-                  path="/products/edits"
-                  element={<ProductEditor />}
-                ></Route>
-                <Route
-                  path="/products/edits/add"
-                  element={<ProductForm />}
-                ></Route>
-                <Route
-                  path="/products/edits/update:id"
-                  element={<ProductForm></ProductForm>}
-                ></Route>
-              </Routes>
-            </div>
+    <UserContext.Provider value={userContextValue}>
+      <Router>
+        <NavigationBar />
+        <div className="App">
+          <div>
+            <Routes>
+              <Route path="/" element={<Home />}></Route>
+              <Route path="/profile" element={<UserProfile />}></Route>
+              <Route path="/products" element={<ProductShowcase />}></Route>
+              <Route path="/products/edits" element={<ProductEditor />}></Route>
+              <Route
+                path="/products/edits/add"
+                element={<ProductForm />}
+              ></Route>
+              <Route
+                path="/products/edits/update:id"
+                element={<ProductForm></ProductForm>}
+              ></Route>
+            </Routes>
           </div>
-        </Router>
-        <Footer></Footer>
-      </UserContext.Provider>
-    </QueryClientProvider>
+        </div>
+      </Router>
+      <Footer></Footer>
+    </UserContext.Provider>
   );
 }

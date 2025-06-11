@@ -1,17 +1,16 @@
-import verify from "jsonwebtoken";
+import { expressjwt } from "express-jwt";
+import { expressJwtSecret } from "jwks-rsa";
 
-const auth = (req, res, next) => {
-  const token = req.header("Authorization")?.split(" ")[1];
-  if (!token)
-    return res.status(401).json({ error: "Access denied. No token provided." });
+const checkJWT = expressjwt({
+  secret: expressJwtSecret({
+    jwksUri: "https://dev-vndmogggzut30im0.us.auth0.com/.well-known/jwks.json",
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+  }),
+  audience: "https://dev-vndmogggzut30im0.us.auth0.com/api/v2/",
+  issuer: "https://dev-vndmogggzut30im0.us.auth0.com/",
+  algorithms: ["RS256"],
+});
 
-  try {
-    const decode = verify(token, process.env.JWT_SECRET);
-    req.user = decode;
-    next();
-  } catch (error) {
-    res.status(400).json({ error: "Invalid Token" });
-  }
-};
-
-export default auth;
+export { checkJWT };

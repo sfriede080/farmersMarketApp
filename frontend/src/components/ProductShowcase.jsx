@@ -59,17 +59,6 @@ export default function ProductShowcase() {
     );
   };
 
-  if (products.data.length == 0) {
-    return (
-      <>
-        <h3>
-          Currently, there are no items available for preorder. Please check
-          again later!
-        </h3>
-      </>
-    );
-  }
-
   if (productsIsLoading || productCategoriesIsLoading)
     return <p>Loading products...</p>;
   if (productsError)
@@ -84,6 +73,17 @@ export default function ProductShowcase() {
         {productCategoriesError.status} Error: {productCategoriesError.message}
       </p>
     );
+
+  if (products.data.length == 0) {
+    return (
+      <>
+        <h3>
+          Currently, there are no items available for preorder. Please check
+          again later!
+        </h3>
+      </>
+    );
+  }
 
   const filteredProducts = products.data.filter(
     (product) =>
