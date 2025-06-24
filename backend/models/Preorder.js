@@ -14,11 +14,10 @@ const Preorder = sequelize.define("Preorders", {
     references: "users",
     referencesKey: "ID",
   },
-  status_code_FK: {
-    type: DataTypes.INTEGER,
+  status_code: {
+    type: DataTypes.ENUM(["unplaced", "placed", "fulfilled", "unfulfilled"]),
     allowNull: false,
-    references: "preorder_status_codes",
-    referencesKey: "ID",
+    defaultValue: "unplaced",
   },
   created_at: {
     type: DataTypes.DATE,
@@ -32,11 +31,6 @@ const Preorder = sequelize.define("Preorders", {
   order_code: {
     type: DataTypes.STRING,
     allowNull: true,
-  },
-  total_price: {
-    type: DataTypes.DECIMAL(10, 2),
-    allowNull: false,
-    default: 0.0,
   },
 });
 

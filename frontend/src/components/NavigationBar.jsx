@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import UserContext from "../context/UserContext";
+import UserContext from "../context/UserContext.js";
 import "../styles/NavigationBar.css";
 import LoginButton from "./LoginButton";
 import LogoutButton from "./LogoutButton";
@@ -46,6 +46,9 @@ export default function NavigationBar() {
             <LogoutButton className="nav-link" />
           </>
         )}
+        <Link className="nav-link" to="/cart">
+          Cart
+        </Link>
       </div>
     </nav>
   );

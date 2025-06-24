@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import "../styles/styles.css";
 import ProductGrid from "./ProductGrid";
 import { Link } from "react-router-dom";
-import UserContext from "../context/UserContext";
+import UserContext from "../context/UserContext.js";
 import { createPortal } from "react-dom";
 import UpdateProductModal from "./UpdateProductModal";
 import { useState } from "react";

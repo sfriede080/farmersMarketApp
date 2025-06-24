@@ -5,7 +5,6 @@ export default function DeleteProductModal({ onClose, product }) {
 
   const handleClick = (e) => {
     const id = product.ID;
-    console.log(id);
     mutation.mutate(id);
   };
 

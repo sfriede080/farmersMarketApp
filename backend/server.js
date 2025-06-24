@@ -4,6 +4,8 @@ import Product from "./models/Product.js";
 import User from "./models/User.js";
 import Ingredient from "./models/Ingredient.js";
 import ProductCategory from "./models/ProductCategory.js";
+import Preorder from "./models/Preorder.js";
+import PreorderItem from "./models/PreorderItem.js";
 import { checkJWT } from "./middleware/auth.js";
 import cors from "cors";
 
@@ -12,9 +14,9 @@ const PORT = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // React dev server
+    origin: "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"], // ✅ include Authorization here
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
@@ -103,7 +105,6 @@ app.get("/products/category/:category_id", async (req, res) => {
 
 app.post("/products", async (req, res) => {
   const product = req.body; //sent in request
-  console.log(product);
   if (
     !product.name ||
     !product.category_FK ||
@@ -111,7 +112,6 @@ app.post("/products", async (req, res) => {
     !product.description ||
     !product.unit
   ) {
-    console.log("missing fields");
     return res.status(400).json({
       success: false,
       message: "Please fill out all required fields.",
@@ -397,11 +397,11 @@ app.get("/productCategories/:id", async (req, res) => {
   }
 });
 
-app.get("/productCategories/type/:type", async (req, res) => {
-  const { type } = req.params;
+app.get("/productCategories/category/:category", async (req, res) => {
+  const { category } = req.params;
   try {
     const productCategory = await ProductCategory.findOne({
-      where: { type: type },
+      where: { category: category },
     });
     if (productCategory == null) {
       return res
@@ -439,7 +439,7 @@ app.post("/productCategories", async (req, res) => {
 app.patch("/productCategories/:id", async (req, res) => {
   const { id } = req.params;
   const req_productCategory = req.body;
-  if (!req_productCategory.type || !req_productCategory.description) {
+  if (!req_productCategory.category || !req_productCategory.description) {
     return res.status(400).json({
       success: false,
       message: "Please fill out all required fields.",
@@ -480,6 +480,195 @@ app.delete("/productCategories/:id", async (req, res) => {
     }
   } catch (error) {
     console.error("Error while deleting a Product Category: ", error.message);
+    return res.status(500).json({ success: false, message: "Server Error" });
+  }
+});
+
+// Preorder Endpoints
+
+app.get("/preorder/:userId/:status", async (req, res) => {
+  const { userId, status } = req.params;
+
+  if (!userId || !status) {
+    return res.status(400).json({
+      success: false,
+      message: "Please provide User ID and order status code.",
+    });
+  }
+
+  // Verify status code
+  if (!["unplaced", "placed", "fulfilled", "unfulfilled"].includes(status)) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid status code provided." });
+  }
+
+  try {
+    const existingPreorder = await Preorder.findOne({
+      where: { user_FK: userId, status_code: status },
+    });
+
+    let data = [];
+
+    if (existingPreorder != null) {
+      data = await PreorderItem.findAll({
+        where: { preorder_FK: existingPreorder.ID },
+        attributes: ["product_FK", "quantity"],
+        include: [
+          {
+            model: Product,
+            attributes: [
+              "name",
+              "description",
+              "image_path",
+              "unit",
+              "units_in_stock",
+              "price",
+            ],
+          },
+        ],
+      });
+    }
+
+    return res.status(200).json({ success: true, data: data });
+  } catch (error) {
+    console.error("Error while fetching a Preorder: ", error.message);
+    return res.status(500).json({ success: false, message: "Server Error" });
+  }
+});
+
+app.post("/preorder/add/:userId", async (req, res) => {
+  const { userId } = req.params;
+  const { productId, quantity } = req.body;
+
+  if (!userId || !productId || !quantity) {
+    return res.status(400).json({
+      success: false,
+      message: "Please provide User and Product ID and product quantity.",
+    });
+  }
+
+  // Verify user exists
+  try {
+    const existingUser = await User.findByPk(userId);
+    if (existingUser == null) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid user ID provided." });
+    }
+  } catch (error) {
+    console.error("Error while fetching a User: ", error.message);
+    return res.status(500).json({ success: false, message: "Server Error" });
+  }
+
+  // Check if preorder exists and, if not, create one
+  let preorder = null;
+  try {
+    const existingPreorder = await Preorder.findOne({
+      where: { user_FK: userId, status_code: "unplaced" },
+    });
+    if (existingPreorder != null) {
+      preorder = existingPreorder;
+    } else {
+      //create a new preorder
+      const newPreorder = Preorder.build({
+        user_FK: userId,
+        status_code: "unplaced",
+        created_at: Date.now(),
+        fulfilled_at: null,
+        order_code: null,
+      });
+
+      preorder = await newPreorder.save();
+    }
+  } catch (error) {
+    console.error("Error while creating a Preorder: ", error.message);
+    return res.status(500).json({ success: false, message: "Server Error" });
+  }
+
+  if (preorder == null) {
+    console.error("Failed to create a preorder");
+    return res.status(500).json({ success: false, message: "Server Error" });
+  }
+
+  // Create or update preorder item
+
+  try {
+    // Check if an preorder item already exists
+    const existingPreorderItem = await PreorderItem.findOne({
+      where: { preorder_FK: preorder.ID, product_FK: productId },
+    });
+    if (existingPreorderItem != null) {
+      // Update product quantity
+      await existingPreorderItem.update({
+        quantity: existingPreorderItem.quantity + quantity,
+      });
+      await existingPreorderItem.save();
+      return res.status(200).json({
+        success: true,
+        message: "Preorder Item updated.",
+        data: existingPreorderItem,
+      });
+    } else {
+      //Create a new preorder item
+      const newPreorderItem = PreorderItem.build({
+        preorder_FK: preorder.ID,
+        product_FK: productId,
+        quantity: quantity,
+      });
+
+      await newPreorderItem.save();
+      return res.status(201).json({
+        success: true,
+        message: "Preorder Item created.",
+        data: newPreorderItem,
+      });
+    }
+  } catch (error) {
+    console.error("Error while creating a Preorder Item: ", error.message);
+    return res.status(500).json({ success: false, message: "Server Error" });
+  }
+});
+
+app.delete("/preorder/:userId/:productId", async (req, res) => {
+  const { userId, productId } = req.params;
+
+  if (!userId || !productId) {
+    return res.status(400).json({
+      success: false,
+      message: "Please provide User and Product IDs.",
+    });
+  }
+
+  // Delete preorder item
+  try {
+    //Find preorder
+    const existingPreorder = await Preorder.findOne({
+      where: { user_FK: userId, status_code: "unplaced" },
+    });
+
+    if (existingPreorder == null) {
+      return res.status(400).json({
+        success: false,
+        message: "Unable to find a preorder for this user.",
+      });
+    }
+
+    const preorderItem = await Ingredient.findOne({
+      where: { preorder_FK: existingPreorder.ID, product_FK: productId },
+    });
+    if (preorderItem == null) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Preorder item not found." });
+    } else {
+      await preorderItem.destroy();
+      return res
+        .status(200)
+        .json({ success: true, message: "Preorder Item deleted." });
+    }
+  } catch (error) {
+    console.error("Error while deleting a Preorder Item: ", error.message);
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 });

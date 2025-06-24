@@ -24,9 +24,6 @@ export default function ProductGrid() {
   };
 
   const matchesStatus = (product, status) => {
-    console.log(product);
-    console.log(status);
-    console.log(statusOptions.find((option) => option.key == status)?.label);
     return (
       status == 0 ||
       statusOptions.find((option) => option.key == status)?.label ===

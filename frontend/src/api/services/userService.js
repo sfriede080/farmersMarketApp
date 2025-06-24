@@ -1,3 +1,4 @@
+import { BASE_URL } from "../client";
 const syncUser = async (user, getAccessTokenSilently) => {
   const token = await getAccessTokenSilently();
 
@@ -18,7 +19,8 @@ const syncUser = async (user, getAccessTokenSilently) => {
     throw new Error("Failed to sync user");
   }
 
-  return response.json();
+  const res = await response.json();
+  return { ID: res.data["ID"], ...user };
 };
 
 export { syncUser };
