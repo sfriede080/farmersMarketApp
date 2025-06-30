@@ -47,6 +47,28 @@ export function CartProvider({ userId, children }) {
     await addPreorderItem(userId, product.ID, quantity);
   };
 
+  const subtractFromCart = async (product, quantity = 1) => {
+    const cartItem = cartItems.find((item) => item.product_FK === product.ID);
+    if (cartItem) {
+      //figure out new quantity
+      let updatedQuantity = Math.max(cartItem.quantity - quantity, 0);
+      if (updatedQuantity == 0) {
+        await removeFromCart(product.ID);
+      } else {
+        //Update local state
+        setCartItems((items) => {
+          return items.map((item) =>
+            item.product_FK === product.ID
+              ? { ...item, quantity: updatedQuantity }
+              : item
+          );
+        });
+        // Sync to backend
+        await addPreorderItem(userId, product.ID, -1 * quantity);
+      }
+    }
+  };
+
   const removeFromCart = async (productId) => {
     // Update local state
     setCartItems((items) =>
@@ -58,7 +80,9 @@ export function CartProvider({ userId, children }) {
   };
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart }}>
+    <CartContext.Provider
+      value={{ cartItems, addToCart, removeFromCart, subtractFromCart }}
+    >
       {children}
     </CartContext.Provider>
   );

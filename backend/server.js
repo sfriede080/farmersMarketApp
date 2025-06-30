@@ -654,7 +654,7 @@ app.delete("/preorder/:userId/:productId", async (req, res) => {
       });
     }
 
-    const preorderItem = await Ingredient.findOne({
+    const preorderItem = await PreorderItem.findOne({
       where: { preorder_FK: existingPreorder.ID, product_FK: productId },
     });
     if (preorderItem == null) {

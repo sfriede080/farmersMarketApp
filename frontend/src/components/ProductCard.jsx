@@ -3,7 +3,7 @@ import defaultImage from "../assets/default.jpg";
 import { useCart } from "../context/CartContext";
 
 export default function ProductCard({ product }) {
-  const { addToCart, cartItems } = useCart();
+  const { addToCart, subtractFromCart, cartItems } = useCart();
 
   const handleError = (e) => {
     e.target.src = defaultImage;
@@ -29,12 +29,21 @@ export default function ProductCard({ product }) {
             href="#"
             className="button"
             onClick={async () => {
+              await subtractFromCart(product, 1);
+            }}
+          >
+            -
+          </a>
+          <p className="in-cart">{cartItem ? cartItem.quantity : 0}</p>
+          <a
+            href="#"
+            className="button"
+            onClick={async () => {
               await addToCart(product, 1);
             }}
           >
-            Add to Cart
+            +
           </a>
-          {cartItem && <p className="in-cart">In Cart: {cartItem.quantity}</p>}
         </div>
       </div>
     </div>

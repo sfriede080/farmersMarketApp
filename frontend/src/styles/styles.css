@@ -352,8 +352,8 @@ main {
 .card-footer .in-cart {
   background: transparent;
   color: inherit;
-  padding: 0.1rem 0.2rem;  /* space inside the background */
-  border-radius: 4px;      /* rounded corners */
+  padding: 0.4rem 0.8rem;  /* space inside the background */
+  border-radius: 20px;      /* rounded corners */
   text-decoration: none;
   transition: 
     background 0.3s ease,
@@ -361,10 +361,18 @@ main {
     opacity 0.3s ease;   /* smooth hover + fade in */
 }
 
-.card:hover .card-footer a,
-.card:hover .card-footer .in-cart {
+.card:hover .card-footer a {
   background: #888;  /* or your desired grey */
   color: #fff;
+    font-size: large;
+  font-weight: bold;
+}
+
+.card:hover .card-footer .in-cart {
+  background: transparent;  /* or your desired grey */
+  color: black;
+  font-size: large;
+  font-weight: bold;
 }
 
   .react-multi-carousel-list {

@@ -23,7 +23,7 @@ async function getPreorder(userId, status) {
   return res;
 }
 
-async function deletePreorderItem({ userId, productId }) {
+async function deletePreorderItem(userId, productId) {
   const response = await fetch(`${BASE_URL}/preorder/${userId}/${productId}`, {
     method: "DELETE",
   });
